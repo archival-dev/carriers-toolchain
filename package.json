@@ -1,0 +1,46 @@
+{
+  "name": "@archival/carriers-toolchain",
+  "version": "0.1.0",
+  "description": "Builds archival carriers: installs from the lockfile, strips types with swc, and links ES modules.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./node": "./src/hosts/node.mjs",
+    "./node-builtin": "./src/hosts/node-builtin.mjs",
+    "./web": "./src/hosts/web.mjs",
+    "./protocol": "./src/protocol.mjs",
+    "./embedded": "./dist/embedded.mjs",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src/",
+    "dist/"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "bundle": "node scripts/bundle.mjs",
+    "prepack": "npm run bundle",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@swc/wasm-typescript-esm": "1.16.13",
+    "es-module-lexer": "^3.0.2"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.10",
+    "prettier": "^3.8.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/archival-dev/carriers-toolchain.git"
+  },
+  "author": "Jesse Ditson <jesse@archival.dev>",
+  "license": "AGPL-3.0-or-later"
+}
