@@ -11,7 +11,9 @@ jobs:
     permissions:
       contents: read
       # npm trusted publishing: the package names this repository and workflow
-      # as its publisher on npmjs.com, so no token is stored here.
+      # as its publisher on npmjs.com, so no token is stored here. The publisher
+      # may only stage, so a maintainer approves each release with 2FA
+      # (`npm stage approve`) before it is installable.
       id-token: write
     steps:
       - uses: actions/checkout@v6
@@ -23,4 +25,4 @@ jobs:
       - run: npm test
       - name: Check the tag matches the package version
         run: test "v$(node -p "require('./package.json').version")" = "$GITHUB_REF_NAME"
-      - run: npm publish
+      - run: npm stage publish

@@ -118,7 +118,8 @@ stand in for the registry, so nothing is downloaded.
 
 `swc` is pinned to an exact version in `package.json`, and every consumer gets
 that version through this package, so bumping it here is what moves all of
-them. Tagging `v<version>` publishes the package from CI.
+them. Tagging `v<version>` stages the package from CI; `npm stage list` shows it
+and `npm stage approve <stage-id>` (2FA) publishes it. CI can only stage.
 
 ## License
 
