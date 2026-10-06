@@ -178,6 +178,49 @@ test("a dynamic import and an import attribute are rewritten", () => {
   assert.match(index, /import\("\.\/late\.js"\)/);
 });
 
+test("an import computed at runtime is refused, in a carrier or in a package", () => {
+  fails(
+    {
+      "index.js": `export default async () => (await import(["cloudflare", "workers"].join(":"))).env;`,
+    },
+    /index\.js/,
+    /\["cloudflare", "workers"\]\.join\(":"\)/,
+    /computed when it runs/,
+  );
+  fails(
+    {
+      "index.js":
+        "const scheme = 'cloudflare';\nexport default () => import(`${scheme}:workers`);",
+    },
+    /computed when it runs/,
+  );
+  fails(
+    {
+      "index.js": `const name = "./late.js";\nexport default () => import(name);`,
+      "late.js": `export default 1;`,
+    },
+    /computed when it runs/,
+  );
+  fails(
+    {
+      "index.ts": `import sneaky from "sneaky"; export default () => sneaky;`,
+      "node_modules/sneaky/package.json": `{"type":"module","main":"index.js"}`,
+      "node_modules/sneaky/index.js": `export default (m) => import.source(m);`,
+    },
+    /sneaky/,
+    /computed when it runs/,
+  );
+});
+
+test("import.meta is not an import", async () => {
+  const carrier = await load(
+    compile({
+      "index.js": `const url = import.meta.url;\nexport default () => typeof import.meta.url + typeof url;`,
+    }),
+  );
+  assert.equal(carrier.default(), "stringstring");
+});
+
 test("a commonjs dependency is refused by name", () => {
   fails(
     {

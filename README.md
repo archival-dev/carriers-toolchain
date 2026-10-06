@@ -22,6 +22,11 @@ names the file or package when it does.
 - **ES modules only.** A CommonJS file, or a package that only publishes
   CommonJS, is refused.
 - **Web APIs only.** A Node built-in (`node:fs`, `crypto`, `buffer`) is refused.
+- **Imports are named.** An import names one of the carrier's own files or an
+  installed package, as a string. A specifier with a scheme
+  (`cloudflare:workers`, `https:`) is refused, and so is an `import()` whose
+  argument is computed when it runs, since the build could not see what it
+  loads.
 - **Dependencies come from the lockfile.** Development and optional packages
   are left out, install scripts never run, and dependencies with no lockfile
   are refused. The lockfile must be version 2 or later.

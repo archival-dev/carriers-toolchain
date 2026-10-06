@@ -1,6 +1,6 @@
 {
   "name": "@archival/carriers-toolchain",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Builds archival carriers: installs from the lockfile, strips types with swc, and links ES modules.",
   "type": "module",
   "exports": {

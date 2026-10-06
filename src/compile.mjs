@@ -153,8 +153,17 @@ const compileModule = (files, path, { strip, parse }) => {
   const edits = [];
   const targets = [];
   for (const found of imports) {
-    if (typeof found.specifier !== "string") {
+    // The lexer reports some `import.meta` (after `typeof`, say) as a dynamic
+    // import whose argument starts at -2, its import.meta sentinel.
+    if (found.type === "import-meta" || found.dynamicStart === -2) {
       continue;
+    }
+    // A runtime specifier could name anything the platform can load, which
+    // the build would never see.
+    if (typeof found.specifier !== "string" || found.glob) {
+      throw new CarrierCompileError(
+        `${describe(files, path)} imports \`${code.slice(found.start, found.end)}\`, which is computed when it runs. A carrier can only import its own files and installed packages, named with a string`,
+      );
     }
     const file = resolveImport(files, path, found.specifier);
     targets.push(file);
